@@ -1,0 +1,55 @@
+<script type="text/javascript">
+jQuery.noConflict();
+jQuery(document).ready(
+function(jQuery) 
+{      
+ 	changeBG();
+});
+
+function changeBG()
+{
+ <?php 
+        $today = date("Y-m-d");
+        $collection = Mage::getModel('festivalbackground/festivalbackground')->getCollection()
+        ->addFieldToFilter("status",1)
+        ->addFieldToFilter("startdate",array('lteq'=> $today))
+        ->addFieldToFilter("enddate",array('gteq'=> $today));
+        
+foreach($collection as $background)
+	{
+		   $bg=$background->getBackground();
+	           $type=$background->getType();
+		   $startdate=$background->getStartdate();
+		   $enddate=$background->getEnddate();
+		   $startdate  = date('Y-m-d',strtotime($startdate));
+		   $enddate  = date('Y-m-d',strtotime($enddate));
+		                    
+             if(($startdate<=$today) && ($enddate>=$today))
+		   {
+				if($type==1)
+				{
+					$imageUrl=Mage::getBaseUrl('media').'festivalbackground/'.$bg;
+				?> 
+			
+				 jQuery(".main-container").css("background", "url('<?php echo $imageUrl; ?>') no-repeat");
+				 jQuery(".footer-container").css("border-top-color", "transparent");
+				 
+	
+				<?php
+				}
+				else
+				{
+				?>
+					   
+					jQuery(".main-container").css("background-color", "<?php echo $bg; ?>");
+					   jQuery(".footer-container").css("border-top-color", "transparent");
+				
+				<?php   	
+			   	}
+	         }    
+	 } 
+	    
+?>
+
+}
+</script>

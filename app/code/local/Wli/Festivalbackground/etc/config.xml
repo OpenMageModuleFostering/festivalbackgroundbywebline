@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Wli_Festivalbackground>
+            <version>0.1.0</version>
+        </Wli_Festivalbackground>
+    </modules>
+    <frontend>
+        <routers>
+            <festivalbackground>
+                <use>standard</use>
+                <args>
+                    <module>Wli_Festivalbackground</module>
+                    <frontName>festivalbackground</frontName>
+                </args>
+            </festivalbackground>
+        </routers>
+        <layout>
+            <updates>
+                <festivalbackground>
+                    <file>festivalbackground.xml</file>
+                </festivalbackground>
+            </updates>
+        </layout>
+    </frontend>
+    <admin>
+    <routers>
+        <!-- Includes our controller, so when we add the adminhtml menu item below, it is found! -->
+        <adminhtml>
+             <args>
+                 <modules>
+                     <festivalbackground before="Mage_Adminhtml">Wli_Festivalbackground_Adminhtml</festivalbackground>
+                 </modules>
+             </args>
+         </adminhtml>
+    </routers>
+</admin>
+<adminhtml>
+    <menu>
+        <festivalbackground module="festivalbackground">
+            <title>Festivalbackground</title>
+            <sort_order>90</sort_order>               
+            <children>
+                <items module="festivalbackground">
+                    <title>Manage Festivalbackground</title>
+                    <sort_order>0</sort_order>
+                    <action>adminhtml/festivalbackground</action>
+                </items>
+            </children>
+        </festivalbackground>
+    </menu>
+        <acl>
+            <resources>
+                <all>
+                    <title>Allow Everything</title>
+                </all>
+                <admin>
+                    <children>
+                        <festivalbackground>
+                            <title>Festivalbackground Module</title>
+                            <sort_order>200</sort_order>
+                        </festivalbackground>
+                    </children>
+                </admin>
+            </resources>   
+        </acl>
+        <layout>
+            <updates>
+                <festivalbackground>
+                    <file>festivalbackground.xml</file>
+                </festivalbackground>
+            </updates>
+        </layout>
+    </adminhtml>   
+    <global>
+        <models>
+            <festivalbackground>
+                <class>Wli_Festivalbackground_Model</class>
+                <resourceModel>festivalbackground_mysql4</resourceModel>
+            </festivalbackground>
+            <festivalbackground_mysql4>
+                <class>Wli_Festivalbackground_Model_Mysql4</class>
+                <entities>
+                    <festivalbackground>
+                        <table>festivalbackground</table>
+                    </festivalbackground>
+                </entities>
+            </festivalbackground_mysql4>
+        </models>
+        <resources>
+            <festivalbackground_setup>
+                <setup>
+                    <module>Wli_Festivalbackground</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </festivalbackground_setup>
+            <festivalbackground_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+  
+  
+            </festivalbackground_write>
+            <festivalbackground_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </festivalbackground_read>
+        </resources>
+        <blocks>
+            <festivalbackground>
+                <class>Wli_Festivalbackground_Block</class>
+            </festivalbackground>
+            
+        </blocks>
+        <helpers>
+            <festivalbackground>
+                <class>Wli_Festivalbackground_Helper</class>
+            </festivalbackground>
+        </helpers>
+    </global>
+</config>

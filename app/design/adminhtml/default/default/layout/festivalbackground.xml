@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+        <default>        
+                <reference name="head">
+                        <action method="addJs">
+                                <script>festivalbackground/jquery-1.10.2.min.js</script>
+                        </action>
+                        <action method="addJs">
+                                <script>prototype/prototype.js</script>
+                        </action>
+                        <action method="addJs">
+                                <script>jscolor/jscolor.js</script>
+                        </action>
+                        <action method="addJs">
+                                <script>prototype/validation.js</script>
+                        </action>
+                        <action method="addJs">
+                                <script>festivalbackground/jquery.fancybox.pack.js</script>
+                        </action>
+                         <action method="addJs">
+                                <script>festivalbackground/custom.js</script>
+                        </action>
+                        <action method="addJs">
+                                <script>festivalbackground/showimg.js</script>
+                        </action>
+                        
+                        <action method="addCss">
+                                <stylesheet>festivalbackground/style.css</stylesheet>
+                        </action>
+                     
+
+                </reference>
+        </default>
+    <festivalbackground_adminhtml_festivalbackground_index>
+        <reference name="content">
+            <block type="festivalbackground/adminhtml_festivalbackground" name="festivalbackground" />
+        </reference>
+    </festivalbackground_adminhtml_festivalbackground_index>
+</layout>
+
+

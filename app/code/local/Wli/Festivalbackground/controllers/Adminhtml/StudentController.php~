@@ -1,0 +1,148 @@
+<?php
+  
+class St_Student_Adminhtml_StudentController extends Mage_Adminhtml_Controller_Action
+{
+  
+    protected function _initAction()
+    {
+        $this->loadLayout()
+            ->_setActiveMenu('student/items')
+            ->_addBreadcrumb(Mage::helper('adminhtml')->__('Items Manager'), Mage::helper('adminhtml')->__('Item Manager'));
+        return $this;
+    }   
+    
+    public function indexAction() {
+        $this->_initAction();       
+        $this->_addContent($this->getLayout()->createBlock('student/adminhtml_student'));
+        $this->renderLayout();
+    }
+  
+    public function editAction()
+    {
+        $studentId     = $this->getRequest()->getParam('id');
+        $studentModel  = Mage::getModel('student/student')->load($studentId);
+  
+        if ($studentModel->getId() || $studentId == 0) {
+  
+            Mage::register('student_data', $studentModel);
+  
+            $this->loadLayout();
+            $this->_setActiveMenu('student/items');
+            
+            $this->_addBreadcrumb(Mage::helper('adminhtml')->__('Student Manager'), Mage::helper('adminhtml')->__('Student Manager'));
+            $this->_addBreadcrumb(Mage::helper('adminhtml')->__('Student News'), Mage::helper('adminhtml')->__('Student News'));
+            
+            $this->getLayout()->getBlock('head')->setCanLoadExtJs(true);
+            
+            $this->_addContent($this->getLayout()->createBlock('student/adminhtml_student_edit'))
+                 ->_addLeft($this->getLayout()->createBlock('student/adminhtml_student_edit_tabs'));
+                
+            $this->renderLayout();
+        } else {
+            Mage::getSingleton('adminhtml/session')->addError(Mage::helper('student')->__('Student does not exist'));
+            $this->_redirect('*/*/');
+        }
+    }
+    
+    public function newAction()
+    {
+        $this->_forward('edit');
+    }
+    
+    public function saveAction()
+    {
+        if ( $this->getRequest()->getPost()) 
+	{
+		if(isset($_FILES['photo']['name'])) 
+		{
+	 		$uploader = new Varien_File_Uploader('photo');
+			$uploader->setAllowedExtensions(array('jpg','jpeg','gif','png'));
+			$uploader->setAllowRenameFiles(false);
+			$uploader->setFilesDispersion(false);
+			$path = Mage::getBaseDir('media');
+			$uploader->save($path, $_FILES['photo']['name']);
+			$data['photo'] =$path. $_FILES['photo']['name'];
+		}
+            	try 
+		{
+                	$postData = $this->getRequest()->getPost();
+                	$studentModel = Mage::getModel('student/student');
+               		$studentModel->setId($this->getRequest()->getParam('id'))
+                    	->setFirstname($postData['firstname'])
+                    	->setLastname($postData['lastname'])
+                    	->setCity($postData['city'])
+		    	->setPhoto($_FILES['photo']['name'])
+		       	->setDob($postData['dob'])
+		    	->setStatus($postData['status'])
+		    	->save();
+		        Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('adminhtml')->__('Student was successfully saved'));
+		        Mage::getSingleton('adminhtml/session')->setStudentData(false);
+	  
+		        $this->_redirect('*/*/');
+		        return;
+            	}
+		catch (Exception $e) 
+		{
+		        Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
+		        Mage::getSingleton('adminhtml/session')->setStudentData($this->getRequest()->getPost());
+		        $this->_redirect('*/*/edit', array('id' => $this->getRequest()->getParam('id')));
+		        return;
+            	}
+        }
+       	 	$this->_redirect('*/*/');
+    }
+    
+    public function deleteAction()
+    {
+        if( $this->getRequest()->getParam('id') > 0 ) {
+            try {
+                $studentModel = Mage::getModel('student/student');
+                
+                $studentModel->setId($this->getRequest()->getParam('id'))
+                    ->delete();
+                    
+                Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('adminhtml')->__('Student was successfully deleted'));
+                $this->_redirect('*/*/');
+            } catch (Exception $e) {
+                Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
+                $this->_redirect('*/*/edit', array('id' => $this->getRequest()->getParam('id')));
+            }
+        }
+        $this->_redirect('*/*/');
+    }
+    /**
+     * Product grid for AJAX request.
+     * Sort and filter result for example.
+     */
+    public function gridAction()
+    {
+        $this->loadLayout();
+        $this->getResponse()->setBody(
+               $this->getLayout()->createBlock('student/adminhtml_student_grid')->toHtml()
+        );
+    }
+    
+    public function massDeleteAction()
+    {
+                $stuIds = $this->getRequest()->getParam('id');     
+                if(!is_array($stuIds)) {
+                Mage::getSingleton('adminhtml/session')->addError(Mage::helper('student')->__('Please select Student.'));
+                } else {
+                try {
+                $studentModel = Mage::getModel('student/student');
+                foreach ($stuIds as $stuId) {
+                $studentModel->load($stuId)->delete();
+                }
+                Mage::getSingleton('adminhtml/session')->addSuccess(
+                Mage::helper('student')->__(
+                'Total of %d record(s) were deleted.', count($stuIds)
+                )
+                );
+                } catch (Exception $e) {
+                Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
+                }
+                }
+                 
+                $this->_redirect('*/*/index');
+    }
+}
