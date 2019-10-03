@@ -1,16 +1,19 @@
 {
-    "name": "OpenMageModuleFostering/festivalbackgroundbywebline",
+    "name": "OpenMageModuleFostering\/festivalbackgroundbywebline",
     "type": "magento-module",
     "license": "GNU",
     "homepage": "",
     "description": "Festival Background By Webline",
     "authors": [
-    {
-        "name": "ATUL MEHTA",
-        "email": "partners@weblineindia.com"
-    }
-],
+        {
+            "name": "ATUL MEHTA",
+            "email": "partners@weblineindia.com"
+        }
+    ],
     "suggest": {
-        "magento-hackathon/magento-composer-installer": "*"
-    }
+        "magento-hackathon\/magento-composer-installer": "*"
+    },
+    "keywords": [
+        "openmage-module"
+    ]
 }
